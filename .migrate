@@ -1,0 +1,9 @@
+{
+  "lastRun": "1613490731203-create-user-model.js",
+  "migrations": [
+    {
+      "title": "1613490731203-create-user-model.js",
+      "timestamp": 1613493304116
+    }
+  ]
+}

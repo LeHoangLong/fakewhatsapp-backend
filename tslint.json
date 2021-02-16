@@ -1,0 +1,6 @@
+{
+    "rules": {
+        "no-promise-as-boolean": true,
+        "no-return-await": true
+    }
+}
