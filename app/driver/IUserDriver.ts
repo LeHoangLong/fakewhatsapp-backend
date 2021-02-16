@@ -12,10 +12,9 @@ export class IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance {
 }
 
 //throw by function if a required parameter is not set when called
-export class IUserDriverErrorMissingRequiredParameter extends Error {
+export class IUserDriverErrorMissingRequiredParameter {
     readonly parameter: string;
     constructor(parameter: string) {
-        super();
         this.parameter = parameter;
     }
 
@@ -24,11 +23,10 @@ export class IUserDriverErrorMissingRequiredParameter extends Error {
     }
 }
 
-export class IUserDriverErrorNoSuchUsername extends Error {
+export class IUserDriverErrorNoSuchUsername {
     readonly username: string;
 
     constructor(userId: string) {
-        super();
         this.username = userId;
     }
 
