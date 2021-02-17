@@ -5,4 +5,5 @@ export const TYPES = {
     UserView: Symbol.for("UserView"),
     JwtSecretKey: Symbol.for("JwtSecretKey"),
     JwtDuration: Symbol.for("JwtDuration"),
+    JwtAuthentication: Symbol.for("JwtAuthentication"),
 };

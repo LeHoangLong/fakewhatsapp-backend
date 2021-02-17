@@ -2,18 +2,19 @@
 import express = require('express');
 import pg = require('pg');
 import config from '../config.json';
+import { myContainer } from './inversify.config';
+import { JwtAuthentication } from './middleware/JwtAuthentication';
 import { router as UserRouter } from './router/UserRouter';
+import { TYPES } from './types';
 
 // Create a new express application instance
 const app: express.Application = express();
+const jwtAuthentication = myContainer.get<JwtAuthentication>(TYPES.JwtAuthentication);
+
 app.use(express.json());
-const client: pg.Client = new pg.Client(config.postgres);
-
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
-
+app.use(jwtAuthentication.authenticate);
 app.use('/user', UserRouter);
+
 
 app.listen(8000, async function () {
   console.log('Example app listening on port 8000!');
