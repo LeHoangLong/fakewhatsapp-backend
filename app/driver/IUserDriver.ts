@@ -1,4 +1,5 @@
 import { Group } from '../controller/Group';
+import { User } from '../model/User';
 
 export class IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance {
     readonly username: string;
@@ -40,4 +41,5 @@ export interface IUserDriver {
     checkPassword(username: string, password: string): Promise<boolean>;
     changePassword(username: string, password: string): Promise<void>;
     doesUsernameExists(username: string): Promise<boolean>;
+    fetchUser(username: string): Promise<User>;
 }

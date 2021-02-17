@@ -9,6 +9,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 const bcrypt = require('bcrypt');
 import "reflect-metadata";
+import { User } from '../model/User';
 
 @injectable()
 export class UserDriverPostgres implements IUserDriver {
@@ -64,6 +65,14 @@ export class UserDriverPostgres implements IUserDriver {
             return true;
         } else {
             return false;
+        }
+    }
+
+    async fetchUser(username: string): Promise<User> {
+        if (await this.doesUsernameExists(username)) {
+            return new User(username);
+        } else {
+            throw new IUserDriverErrorNoSuchUsername(username);
         }
     }
 }

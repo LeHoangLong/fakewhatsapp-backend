@@ -26,10 +26,12 @@
   "homepage": "https://github.com/LeHoangLong/fakewhatsapp#readme",
   "dependencies": {
     "@types/express": "^4.17.11",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/pg": "^7.14.10",
     "bcrypt": "^5.0.0",
     "express": "^4.17.1",
     "inversify": "^5.0.5",
+    "jsonwebtoken": "^8.5.1",
     "migrate": "^1.7.0",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
