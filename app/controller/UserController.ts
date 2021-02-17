@@ -4,6 +4,7 @@ import {
     IUserDriverErrorNoSuchUsername, 
     IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance,
 } from '../driver/IUserDriver';
+import { User } from '../model/User';
 // rename exception for clearer readability. Should be thrown by driver layer.
 export { 
     IUserDriverErrorNoSuchUsername as UserControllerErrorUsernameNotFound,
@@ -27,5 +28,9 @@ export class UserController {
 
     async logIn(username: string, password: string): Promise<boolean> {
         return this.driver.checkPassword(username, password);
+    }
+
+    async getUserInfo(username: string): Promise<User> {
+        return this.driver.fetchUser(username);
     }
 }

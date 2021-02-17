@@ -37,10 +37,6 @@ export class UserView {
     async signUpView(request: express.Request, response: express.Response) {
         let username = request.body.username;
         let password = request.body.password;
-        console.log(request.body);
-        console.log("username 1: " + username);
-        console.log("password 1: " + password);
-
         if (!username || !password) {
             return response.status(400).send();
         }
@@ -55,5 +51,10 @@ export class UserView {
                 return response.status(502).send(err.toString());
             }
         }
+    }
+
+    //if we come to here, must have already been authorized, so return the attached user model
+    async getInfoView(request: express.Request, response: express.Response) {
+        return response.status(200).send(request.context.user);
     }
 }

@@ -29,7 +29,7 @@ export class JwtAuthentication {
     }
 
     async authenticate(request: express.Request, response: express.Response, next: express.NextFunction) {
-        if (request.cookies.jwt != undefined) {
+        if (request.cookies != undefined && request.cookies.jwt != undefined) {
             let payload: any = jwt.verify(request.cookies.jwt, this.secretKey);
             if ('username' in payload) {
                 let username: string = payload.username;
