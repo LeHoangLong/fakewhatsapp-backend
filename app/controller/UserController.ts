@@ -4,6 +4,7 @@ import {
     IUserDriverErrorNoSuchUsername, 
     IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance,
 } from '../driver/IUserDriver';
+import { JwtAuthentication } from '../middleware/JwtAuthentication';
 import { User } from '../model/User';
 // rename exception for clearer readability. Should be thrown by driver layer.
 export { 
@@ -12,22 +13,37 @@ export {
 } from '../driver/IUserDriver';
 import { TYPES } from '../types';
 
+export class UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword {
+    toString(): string {
+        return 'Authentication failed with the given username and password';
+    }
+}
 
 @injectable()
 export class UserController {
     driver: IUserDriver;
+    private jwtAuthentication: JwtAuthentication;
     constructor(
-        @inject(TYPES.UserDriver) driver: IUserDriver
+        @inject(TYPES.UserDriver) driver: IUserDriver,
+        @inject(TYPES.JwtAuthentication) jwtAuthentication: JwtAuthentication,
     ) {
         this.driver = driver;
+        this.jwtAuthentication = jwtAuthentication;
     }
 
-    async signUp(username: string, password: string): Promise<void> {
+    //return jwt token
+    async signUp(username: string, password: string): Promise<string> {
         await this.driver.createUser(username, password);
+        return this.jwtAuthentication.generateToken(username);
     }
 
-    async logIn(username: string, password: string): Promise<boolean> {
-        return this.driver.checkPassword(username, password);
+    //return jwt token
+    async logIn(username: string, password: string): Promise<string> {
+        if (await this.driver.isPasswordCorrect(username, password)) {
+            return this.jwtAuthentication.generateToken(username);
+        } else {
+            throw new UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword();
+        }
     }
 
     async getUserInfo(username: string): Promise<User> {

@@ -1,19 +1,20 @@
 // lib/app.ts
 import express = require('express');
-import pg = require('pg');
-import config from '../config.json';
 import { myContainer } from './inversify.config';
 import { JwtAuthentication } from './middleware/JwtAuthentication';
 import { router as UserRouter } from './router/UserRouter';
 import { TYPES } from './types';
-import { UserView } from './view/UserView';
+import cookies from 'cookie-parser';
+import { generateContext } from './middleware/Context';
 
 // Create a new express application instance
 const app: express.Application = express();
 const jwtAuthentication = myContainer.get<JwtAuthentication>(TYPES.JwtAuthentication);
 
 app.use(express.json());
-app.use(jwtAuthentication.authenticate);
+app.use(cookies());
+app.use(generateContext);
+app.use((req, res, next) => jwtAuthentication.authenticate(req, res, next));
 //TODO: remove
 app.use(async (req, res, next) => {
   //simulate delay for developement

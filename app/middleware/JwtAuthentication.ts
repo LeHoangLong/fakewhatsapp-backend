@@ -31,6 +31,8 @@ export class JwtAuthentication {
     async authenticate(request: express.Request, response: express.Response, next: express.NextFunction) {
         if (request.cookies != undefined && request.cookies.jwt != undefined) {
             let payload: any = jwt.verify(request.cookies.jwt, this.secretKey);
+            console.log('payload');
+            console.log(payload);
             if ('username' in payload) {
                 let username: string = payload.username;
                 try { 

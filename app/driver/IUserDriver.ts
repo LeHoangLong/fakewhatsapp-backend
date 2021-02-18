@@ -37,7 +37,7 @@ export class IUserDriverErrorNoSuchUsername {
 
 export interface IUserDriver {
     createUser(username: string, password: string): Promise<void>;
-    checkPassword(username: string, password: string): Promise<boolean>;
+    isPasswordCorrect(username: string, password: string): Promise<boolean>;
     changePassword(username: string, password: string): Promise<void>;
     doesUsernameExists(username: string): Promise<boolean>;
     fetchUser(username: string): Promise<User>;

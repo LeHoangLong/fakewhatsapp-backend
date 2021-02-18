@@ -25,10 +25,12 @@
   },
   "homepage": "https://github.com/LeHoangLong/fakewhatsapp#readme",
   "dependencies": {
+    "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.11",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/pg": "^7.14.10",
     "bcrypt": "^5.0.0",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "inversify": "^5.0.5",
     "jsonwebtoken": "^8.5.1",

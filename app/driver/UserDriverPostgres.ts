@@ -16,22 +16,25 @@ export class UserDriverPostgres implements IUserDriver {
     private pool: Pool;
     
     constructor(
-        @inject(TYPES.UserDatabaseClientPool) pool: Pool
+        @inject(TYPES.UserDatabaseClientPool) pool: Pool,
     ) {
         this.pool = pool;
     }
 
     
     async createUser(username: string, password: string): Promise<void> {
+        console.log("create user");
         let hashedPassword: string = await bcrypt.hash(password, 10);
         if (await this.doesUsernameExists(username)) {
+            console.log("username exitss");
             throw new IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance(username);
         }
         await this.pool.query('INSERT INTO "user" (username, password) VALUES ($1, $2)', [username, hashedPassword])
+        console.log("created successfully");
     }
 
 
-    async checkPassword(username: string, password: string): Promise<boolean> {
+    async isPasswordCorrect(username: string, password: string): Promise<boolean> {
         if (!await this.doesUsernameExists(username)) {
             throw new IUserDriverErrorNoSuchUsername(username);
         }

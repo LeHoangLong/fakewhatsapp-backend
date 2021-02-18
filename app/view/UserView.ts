@@ -1,7 +1,7 @@
 import express = require('express');
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
-import { UserController, UserControllerErrorUsernameAlreadyExistsWhenSignUp, UserControllerErrorUsernameNotFound } from '../controller/UserController';
+import { UserController, UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword, UserControllerErrorUsernameAlreadyExistsWhenSignUp, UserControllerErrorUsernameNotFound } from '../controller/UserController';
 
 @injectable()
 export class UserView {
@@ -22,13 +22,12 @@ export class UserView {
         }
 
         try {
-            if (!await this.controller.logIn(username, password)) {
-                return response.status(403).send();
-            } else {
-                return response.status(200).send();
-            }
+            let jwtToken = await this.controller.logIn(username, password);
+            return response.cookie('jwt', jwtToken).status(200).send();
         } catch (err) {
             if (err instanceof UserControllerErrorUsernameNotFound) {
+                return response.status(403).send();
+            } if (err instanceof UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword) {
                 return response.status(403).send();
             } else {
                 response.status(502).send(err.toString());
@@ -45,8 +44,8 @@ export class UserView {
         }
 
         try {
-            await this.controller.signUp(username, password);
-            return response.status(201).send();
+            let jwtToken = await this.controller.signUp(username, password);
+            return response.cookie('jwt', jwtToken).status(201).send();
         } catch (err) {
             if (err instanceof UserControllerErrorUsernameAlreadyExistsWhenSignUp) {
                 return response.status(403).send();
