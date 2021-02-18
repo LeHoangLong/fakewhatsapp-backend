@@ -7,7 +7,6 @@ export class IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance {
         this.username = username;
     }
     toString(): string {
-        console.log('to string');
         return `Username ${this.username} already exists`;
     }
 }

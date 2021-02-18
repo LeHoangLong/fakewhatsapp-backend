@@ -30,6 +30,9 @@ export class UserView {
         } catch (err) {
             if (err instanceof UserControllerErrorUsernameNotFound) {
                 return response.status(403).send();
+            } else {
+                response.status(502).send(err.toString());
+                throw err;
             }
         }
     }
