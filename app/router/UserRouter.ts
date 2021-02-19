@@ -8,14 +8,17 @@ export const router: express.Router = express.Router();
 const userAuthorization: UserAuthorization = myContainer.get<UserAuthorization>(TYPES.UserAuthorization);
 
 router.post('/login', (req, res) => {
-    myContainer.get<UserView>(TYPES.UserView).loginView(req, res)
+    myContainer.get<UserView>(TYPES.UserView).loginView(req, res);
 });
 router.post('/signup', (req, res) => {
-    myContainer.get<UserView>(TYPES.UserView).signUpView(req, res)
+    myContainer.get<UserView>(TYPES.UserView).signUpView(req, res);
 });
 router.get('/info', userAuthorization.authorize, (req, res) => {
-    myContainer.get<UserView>(TYPES.UserView).getInfoView(req, res)
+    myContainer.get<UserView>(TYPES.UserView).getInfoView(req, res);
 });
 router.get('/find', userAuthorization.authorize, (req, res) => {
-    myContainer.get<UserView>(TYPES.UserView).findUserByName(req, res)
+    myContainer.get<UserView>(TYPES.UserView).findUserByName(req, res);
 });
+router.get('/friends', userAuthorization.authorize, (req, res) => {
+    myContainer.get<UserView>(TYPES.UserView).fetchFriends(req, res);
+})

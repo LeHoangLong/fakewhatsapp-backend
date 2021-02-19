@@ -6,6 +6,7 @@ import { router as UserRouter } from './router/UserRouter';
 import { TYPES } from './types';
 import cookies from 'cookie-parser';
 import { generateContext } from './middleware/Context';
+import { generatePaginationParams } from './middleware/PaginationParams';
 
 // Create a new express application instance
 const app: express.Application = express();
@@ -14,6 +15,7 @@ const jwtAuthentication = myContainer.get<JwtAuthentication>(TYPES.JwtAuthentica
 app.use(express.json());
 app.use(cookies());
 app.use(generateContext);
+app.use(generatePaginationParams);
 app.use((req, res, next) => {
   if (!req.path.match(/^(\/?)user\/(login|signup)(\/?)/)){
     jwtAuthentication.authenticate(req, res, next)

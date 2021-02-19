@@ -3,5 +3,9 @@
         "user": "fakewhatsapp",
         "password": "fakewhatsapp",
         "host": "localhost"
+    },
+    "pagination": {
+        "defaultSize": 10,
+        "maxSize": 50
     }
 }

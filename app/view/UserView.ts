@@ -2,6 +2,7 @@ import express = require('express');
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { UserController, UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword, UserControllerErrorUsernameAlreadyExistsWhenSignUp, UserControllerErrorUsernameNotFound } from '../controller/UserController';
+import config from '../../config.json';
 
 @injectable()
 export class UserView {
@@ -58,7 +59,8 @@ export class UserView {
 
     //if we come to here, must have already been authorized, so return the attached user model
     async getInfoView(request: express.Request, response: express.Response) {
-        return response.status(200).send(request.context.user);
+        let user = await this.controller.getUserInfo(request.context.username);
+        return response.status(200).send(user);
     }
 
     async findUserByName(request: express.Request, response: express.Response) {
@@ -66,16 +68,22 @@ export class UserView {
             return response.status(400).send();
         }
         let name: string = request.query.name as string;
-        let limit: number = 10;
-        let offset: number = 0;
-        if ('limit' in request.query) {
-            limit = parseInt(request.query.limit as string);
-        }
-        if ('offset' in request.query) {
-            offset = parseInt(request.query.offset as string);
-        }
         try {
-            let users = await this.controller.findUserByName(name, offset, limit);
+            let users = await this.controller.findUserByName(name, request.context.paginationSize, request.context.paginationOffset);
+            let ret: Object[] = [];
+            users.forEach((element) => {
+                ret.push(element.toPlainObject());
+            });
+            return response.status(200).send(ret);
+        } catch (err) {
+            response.status(502).send(err.toString());
+            throw err;
+        }
+    }
+
+    async fetchFriends(request: express.Request, response: express.Response) {
+        try {
+            let users = await this.controller.fetchFriends(request.context.username, request.context.paginationSize, request.context.paginationOffset);
             let ret: Object[] = [];
             users.forEach((element) => {
                 ret.push(element.toPlainObject());

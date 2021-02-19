@@ -41,5 +41,6 @@ export interface IUserDriver {
     changePassword(username: string, password: string): Promise<void>;
     doesUsernameExists(username: string): Promise<boolean>;
     fetchUser(username: string): Promise<User>;
-    findUserByName(name: string, offset: number, numberOfResults: number): Promise<User[]>;
+    findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]>;
+    fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]>;
 }

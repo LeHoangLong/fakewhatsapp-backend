@@ -54,7 +54,11 @@ export class UserController {
         
     }
 
-    async findUserByName(name: string, offset: number, numberOfResults: number): Promise<User[]> {
-        return this.driver.findUserByName(name, offset, numberOfResults);
+    async findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]> {
+        return this.driver.findUserByName(name, numberOfResults, offset);
+    }
+
+    async fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]> {
+        return this.driver.fetchFriends(username, numberOfResults, offset);
     }
 }
