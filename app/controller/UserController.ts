@@ -5,11 +5,15 @@ import {
     IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance,
 } from '../driver/IUserDriver';
 import { JwtAuthentication } from '../middleware/JwtAuthentication';
+import { Invitation } from '../model/Invitation';
 import { User } from '../model/User';
 // rename exception for clearer readability. Should be thrown by driver layer.
 export { 
     IUserDriverErrorNoSuchUsername as UserControllerErrorUsernameNotFound,
     IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance as UserControllerErrorUsernameAlreadyExistsWhenSignUp,
+    IUserDriverErrorNoSuchInfoId as UserControllerErrorNoSuchInfoId,
+    IUserDriverErrorUserDeleted as UserControllerErrorUserDeleted,
+    IUserDriverErrorNoSuchInvitation as UserControllerErrorNoSuchInvitation,
 } from '../driver/IUserDriver';
 import { TYPES } from '../types';
 
@@ -50,15 +54,21 @@ export class UserController {
         return this.driver.fetchUser(username);
     }
 
-    async addFriend(friendUsername: string) {
-        
-    }
-
     async findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]> {
         return this.driver.findUserByName(name, numberOfResults, offset);
     }
 
     async fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]> {
         return this.driver.fetchFriends(username, numberOfResults, offset);
+    }
+
+    async sendFriendRequestIfNotYet(senderUsername: string, recipientInfoId: number): Promise<Invitation>{
+        let recipientUsername = await this.driver.fetchUsernameFromInfoId(recipientInfoId);
+        return this.driver.sendFriendRequestIfNotYet(senderUsername, recipientUsername);
+    }
+
+    async acceptFriendRequest(recipientUsername: string, senderInfoId: number): Promise<void> {
+        let senderUsername = await this.driver.fetchUsernameFromInfoId(senderInfoId);
+        return this.driver.acceptFriendRequest(senderUsername, recipientUsername);
     }
 }

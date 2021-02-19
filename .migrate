@@ -1,5 +1,5 @@
 {
-  "lastRun": "1613737360439-create-create-user-procedure.js",
+  "lastRun": "1613769416257-add-accept-invitation-procedure.js",
   "migrations": [
     {
       "title": "1613490731203-create-initial-model.js",
@@ -8,6 +8,14 @@
     {
       "title": "1613737360439-create-create-user-procedure.js",
       "timestamp": 1613740543735
+    },
+    {
+      "title": "1613767839095-add-create-invitation-procedure.js",
+      "timestamp": 1613768436796
+    },
+    {
+      "title": "1613769416257-add-accept-invitation-procedure.js",
+      "timestamp": 1613770980471
     }
   ]
 }

@@ -1,4 +1,5 @@
 import { Group } from '../controller/Group';
+import { Invitation } from '../model/Invitation';
 import { User } from '../model/User';
 
 export class IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance {
@@ -35,6 +36,42 @@ export class IUserDriverErrorNoSuchUsername {
     }
 }
 
+export class IUserDriverErrorNoSuchInfoId {
+    readonly infoId: number;
+
+    constructor(infoId: number) {
+        this.infoId = infoId;
+    }
+
+    toString(): string {
+        return `User with info id ${this.infoId} not found`;
+    }
+}
+export class IUserDriverErrorUserDeleted {
+    readonly infoId: number;
+
+    constructor(infoId: number) {
+        this.infoId = infoId;
+    }
+
+    toString(): string {
+        return `User with info id ${this.infoId} has already been deleted`;
+    }
+}
+
+export class IUserDriverErrorNoSuchInvitation {
+    readonly senderUsername: string;
+    readonly recipientUsername: string;
+    constructor(senderUsername: string, recipientUsername: string) {
+        this.senderUsername = senderUsername;
+        this.recipientUsername = recipientUsername;
+    }
+    toString(): string {
+        return `No invitation from ${this.senderUsername} to ${this.recipientUsername}`;
+    }
+}
+
+
 export interface IUserDriver {
     createUser(username: string, password: string): Promise<void>;
     isPasswordCorrect(username: string, password: string): Promise<boolean>;
@@ -43,4 +80,7 @@ export interface IUserDriver {
     fetchUser(username: string): Promise<User>;
     findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]>;
     fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]>;
+    sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation>;
+    fetchUsernameFromInfoId(infoId: number): Promise<string>;
+    acceptFriendRequest(senderUsername: string, recipientUsername: string): Promise<void>;
 }

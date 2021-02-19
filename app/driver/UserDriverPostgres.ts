@@ -1,7 +1,10 @@
 import { 
     IUserDriver, 
     IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance,
-    IUserDriverErrorNoSuchUsername
+    IUserDriverErrorNoSuchUsername,
+    IUserDriverErrorNoSuchInfoId,
+    IUserDriverErrorUserDeleted,
+    IUserDriverErrorNoSuchInvitation
 } from './IUserDriver';
 import { Group } from '../controller/Group';
 import { Pool } from 'pg';
@@ -10,6 +13,7 @@ import { TYPES } from '../types';
 const bcrypt = require('bcrypt');
 import "reflect-metadata";
 import { User } from '../model/User';
+import { Invitation } from '../model/Invitation';
 
 @injectable()
 export class UserDriverPostgres implements IUserDriver {
@@ -98,5 +102,36 @@ export class UserDriverPostgres implements IUserDriver {
             users.push(new User(userData.id, userData.name));
         }
         return users;
+    }
+
+    async sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation> {
+        await this.pool.query('CALL createinvitation($1, $2)', [senderUsername, recipientUsername]);
+        //if success, then return an invitation object
+        return new Invitation(senderUsername, recipientUsername);
+    }
+    
+    async fetchUsernameFromInfoId(infoId: number): Promise<string> {
+        let result = await this.pool.query('SELECT username from "UserInfo" where id=$1', [infoId]);
+        if (result.rowCount == 0) {
+            throw new IUserDriverErrorNoSuchInfoId(infoId);
+        } else {
+            if (!result.rows[0].username) {
+                throw new IUserDriverErrorUserDeleted(infoId);
+            } else {
+                return result.rows[0].username;
+            }
+        }
+    }
+    
+    async acceptFriendRequest(senderUsername: string, recipientUsername: string): Promise<void> {
+        try {
+            this.pool.query('CALL acceptinvitation($1, $2)', [senderUsername, recipientUsername]);
+        } catch (error) {
+            if (error.message === 'NO_SUCH_INVITATION') {
+                throw new IUserDriverErrorNoSuchInvitation(senderUsername, recipientUsername);
+            } else {
+                throw error;
+            }
+        }
     }
 }
