@@ -75,11 +75,18 @@ export class UserDriverPostgres implements IUserDriver {
         var result = await this.pool.query('SELECT id, name from "UserInfo" where "UserInfo".id in (SELECT infoId FROM "User" where username=$1)', [username]);
         if (result.rowCount > 0) {
             let userData = result.rows[0];
-            console.log('userData');
-            console.log(userData);
             return new User(userData.id, userData.name);
         } else {
             throw new IUserDriverErrorNoSuchUsername(username);
         }
+    }
+
+    async findUserByName(name: string, offset: number, numberOfResults: number): Promise<User[]> {
+        var results = await this.pool.query('SELECT id, name FROM "UserInfo" where name LIKE $1 ORDER BY name LIMIT $2 OFFSET $3', ['%' + name + '%', numberOfResults, offset]);
+        let users: User[] = [];
+        for (let i = 0; i < results.rowCount; i++) {
+            users.push(new User(results.rows[i].id, results.rows[i].name));
+        }
+        return users;
     }
 }

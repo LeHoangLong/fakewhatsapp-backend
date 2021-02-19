@@ -5,4 +5,7 @@ export class User {
         this.userInfoId = userInfoId;
         this.name = name;
     }
+    toPlainObject(): Object {
+        return Object.assign({}, this);
+    }
 }

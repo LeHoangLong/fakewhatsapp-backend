@@ -31,8 +31,6 @@ export class JwtAuthentication {
     async authenticate(request: express.Request, response: express.Response, next: express.NextFunction) {
         if (request.cookies != undefined && request.cookies.jwt != undefined) {
             let payload: any = jwt.verify(request.cookies.jwt, this.secretKey);
-            console.log('payload');
-            console.log(payload);
             if ('username' in payload) {
                 let username: string = payload.username;
                 try { 
@@ -40,8 +38,6 @@ export class JwtAuthentication {
                     request.context.user = user;
                     next();
                 } catch (error) {
-                    console.log("error");
-                    console.log(error);
                     if (error instanceof IUserDriverErrorNoSuchUsername) {
                         return response.status(403).send();
                     } else {

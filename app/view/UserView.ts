@@ -60,4 +60,30 @@ export class UserView {
     async getInfoView(request: express.Request, response: express.Response) {
         return response.status(200).send(request.context.user);
     }
+
+    async findUserByName(request: express.Request, response: express.Response) {
+        if (!('name' in request.query)) {
+            return response.status(400).send();
+        }
+        let name: string = request.query.name as string;
+        let limit: number = 10;
+        let offset: number = 0;
+        if ('limit' in request.query) {
+            limit = parseInt(request.query.limit as string);
+        }
+        if ('offset' in request.query) {
+            offset = parseInt(request.query.offset as string);
+        }
+        try {
+            let users = await this.controller.findUserByName(name, offset, limit);
+            let ret: Object[] = [];
+            users.forEach((element) => {
+                ret.push(element.toPlainObject());
+            });
+            return response.status(200).send(ret);
+        } catch (err) {
+            response.status(502).send(err.toString());
+            throw err;
+        }
+    }
 }

@@ -53,4 +53,8 @@ export class UserController {
     async addFriend(friendUsername: string) {
         
     }
+
+    async findUserByName(name: string, offset: number, numberOfResults: number): Promise<User[]> {
+        return this.driver.findUserByName(name, offset, numberOfResults);
+    }
 }

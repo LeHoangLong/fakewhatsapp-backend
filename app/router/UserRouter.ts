@@ -16,3 +16,6 @@ router.post('/signup', (req, res) => {
 router.get('/info', userAuthorization.authorize, (req, res) => {
     myContainer.get<UserView>(TYPES.UserView).getInfoView(req, res)
 });
+router.get('/find', userAuthorization.authorize, (req, res) => {
+    myContainer.get<UserView>(TYPES.UserView).findUserByName(req, res)
+});
