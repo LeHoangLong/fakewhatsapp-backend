@@ -23,14 +23,18 @@ export class UserDriverPostgres implements IUserDriver {
 
     
     async createUser(username: string, password: string): Promise<void> {
-        console.log("create user");
-        let hashedPassword: string = await bcrypt.hash(password, 10);
-        if (await this.doesUsernameExists(username)) {
-            console.log("username exitss");
-            throw new IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance(username);
+        console.log("create User");
+        try {
+            let hashedPassword: string = await bcrypt.hash(password, 10);
+            await this.pool.query('CALL createnewuser($1, $2)', [username, hashedPassword]);
+            console.log("created successfully");
+        } catch (err) {
+            if (err.message === 'USERNAME_ALREADY_EXISTS') {
+                throw new IUserDriverErrorUsernameAlreadyExistsWhenCreateInstance(username);
+            } else {
+                throw err;
+            }
         }
-        await this.pool.query('INSERT INTO "user" (username, password) VALUES ($1, $2)', [username, hashedPassword])
-        console.log("created successfully");
     }
 
 
@@ -38,7 +42,7 @@ export class UserDriverPostgres implements IUserDriver {
         if (!await this.doesUsernameExists(username)) {
             throw new IUserDriverErrorNoSuchUsername(username);
         }
-        let result = await this.pool.query('SELECT password FROM "user" WHERE username=$1', [username]);
+        let result = await this.pool.query('SELECT password FROM "User" WHERE username=$1', [username]);
         if (result.rowCount == 0) {
             return false;
         } else {
@@ -51,7 +55,7 @@ export class UserDriverPostgres implements IUserDriver {
             throw new IUserDriverErrorNoSuchUsername(username);
         }
         let hashedPassword: string = await bcrypt.hash(password, 10);
-        await this.pool.query("UPDATE user SET password=$1 where username=$2", [hashedPassword, username]);
+        await this.pool.query('UPDATE "User" SET password=$1 where username=$2', [hashedPassword, username]);
     }  
 
     addGroup(group: Group): void {
@@ -59,7 +63,7 @@ export class UserDriverPostgres implements IUserDriver {
     }
 
     async doesUsernameExists(username: string): Promise<boolean> {
-        var result = await this.pool.query('SELECT COUNT(*) FROM "user" WHERE username=$1', [username]);
+        var result = await this.pool.query('SELECT COUNT(*) FROM "User" WHERE username=$1', [username]);
         if (parseInt(result.rows[0].count) > 0) {
             return true;
         } else {
@@ -68,8 +72,12 @@ export class UserDriverPostgres implements IUserDriver {
     }
 
     async fetchUser(username: string): Promise<User> {
-        if (await this.doesUsernameExists(username)) {
-            return new User(username);
+        var result = await this.pool.query('SELECT id, name from "UserInfo" where "UserInfo".id in (SELECT infoId FROM "User" where username=$1)', [username]);
+        if (result.rowCount > 0) {
+            let userData = result.rows[0];
+            console.log('userData');
+            console.log(userData);
+            return new User(userData.id, userData.name);
         } else {
             throw new IUserDriverErrorNoSuchUsername(username);
         }

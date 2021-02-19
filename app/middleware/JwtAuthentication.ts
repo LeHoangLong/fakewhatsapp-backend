@@ -40,6 +40,8 @@ export class JwtAuthentication {
                     request.context.user = user;
                     next();
                 } catch (error) {
+                    console.log("error");
+                    console.log(error);
                     if (error instanceof IUserDriverErrorNoSuchUsername) {
                         return response.status(403).send();
                     } else {

@@ -49,4 +49,8 @@ export class UserController {
     async getUserInfo(username: string): Promise<User> {
         return this.driver.fetchUser(username);
     }
+
+    async addFriend(friendUsername: string) {
+        
+    }
 }

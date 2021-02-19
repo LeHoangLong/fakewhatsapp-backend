@@ -14,7 +14,13 @@ const jwtAuthentication = myContainer.get<JwtAuthentication>(TYPES.JwtAuthentica
 app.use(express.json());
 app.use(cookies());
 app.use(generateContext);
-app.use((req, res, next) => jwtAuthentication.authenticate(req, res, next));
+app.use((req, res, next) => {
+  if (!req.path.match(/^(\/?)user\/(login|signup)(\/?)/)){
+    jwtAuthentication.authenticate(req, res, next)
+  } else {
+    next();
+  }
+});
 //TODO: remove
 app.use(async (req, res, next) => {
   //simulate delay for developement

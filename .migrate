@@ -1,9 +1,13 @@
 {
-  "lastRun": "1613490731203-create-user-model.js",
+  "lastRun": "1613737360439-create-create-user-procedure.js",
   "migrations": [
     {
-      "title": "1613490731203-create-user-model.js",
-      "timestamp": 1613493304116
+      "title": "1613490731203-create-initial-model.js",
+      "timestamp": 1613739483064
+    },
+    {
+      "title": "1613737360439-create-create-user-procedure.js",
+      "timestamp": 1613740543735
     }
   ]
 }

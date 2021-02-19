@@ -47,6 +47,7 @@ export class UserView {
             let jwtToken = await this.controller.signUp(username, password);
             return response.cookie('jwt', jwtToken).status(201).send();
         } catch (err) {
+            console.log(err);
             if (err instanceof UserControllerErrorUsernameAlreadyExistsWhenSignUp) {
                 return response.status(403).send();
             } else {
