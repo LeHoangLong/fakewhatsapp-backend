@@ -19,5 +19,12 @@ export function generatePaginationParams(request: express.Request, response: exp
         }
         request.context.paginationOffset = offset;
     }
+    if ('getCount' in request.query) {
+        if (request.query.getCount === 'true') {
+            request.context.getCount = true;
+        } else {
+            request.context.getCount = false;
+        }
+    }
     next();
 }

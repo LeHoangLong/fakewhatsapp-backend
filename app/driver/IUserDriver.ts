@@ -79,6 +79,7 @@ export interface IUserDriver {
     doesUsernameExists(username: string): Promise<boolean>;
     fetchUser(username: string): Promise<User>;
     findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]>;
+    fetchNumberOfFriends(username: string): Promise<number>;
     fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]>;
     sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation>;
     fetchUsernameFromInfoId(infoId: number): Promise<string>;

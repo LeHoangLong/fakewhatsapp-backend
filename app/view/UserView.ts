@@ -84,11 +84,17 @@ export class UserView {
 
     async fetchFriends(request: express.Request, response: express.Response) {
         try {
-            let users = await this.controller.fetchFriends(request.context.username, request.context.paginationSize, request.context.paginationOffset);
-            let ret: Object[] = [];
+            let [users, count] = await this.controller.fetchFriends(request.context.username, request.context.paginationSize, request.context.paginationOffset, request.context.getCount);
+            let userData: Object[] = [];
             users.forEach((element) => {
-                ret.push(element.toPlainObject());
+                userData.push(element.toPlainObject());
             });
+            let ret: any = {
+                rows: userData,
+            }
+            if (request.context.getCount) {
+                ret['count'] = count;
+            }
             return response.status(200).send(ret);
         } catch (err) {
             response.status(502).send(err.toString());

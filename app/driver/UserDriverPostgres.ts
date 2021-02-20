@@ -94,6 +94,11 @@ export class UserDriverPostgres implements IUserDriver {
         return users;
     }
 
+    async fetchNumberOfFriends(username: string): Promise<number> {
+        var results = await this.pool.query('SELECT COUNT(*) FROM "UserInfo" where id in (SELECT infoId FROM "User" where username in (SELECT friendUsername from "User_Friends" where username=$1))', [username]);
+        return results.rows[0].count;     
+    }
+
     async fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]> {
         var results = await this.pool.query('SELECT id, name FROM "UserInfo" where id in (SELECT infoId FROM "User" where username in (SELECT friendUsername from "User_Friends" where username=$1)) LIMIT $2 OFFSET $3', [username, numberOfResults, offset]);
         let users: User[] = [];
