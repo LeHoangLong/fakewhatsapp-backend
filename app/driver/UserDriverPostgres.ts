@@ -86,7 +86,7 @@ export class UserDriverPostgres implements IUserDriver {
     }
 
     async findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]> {
-        var results = await this.pool.query('SELECT id, name FROM "UserInfo" where name LIKE $1 ORDER BY name LIMIT $2 OFFSET $3', ['%' + name + '%', numberOfResults, offset]);
+        var results = await this.pool.query('SELECT id, name FROM "UserInfo" where name LIKE $1 ORDER BY name LIMIT $2 OFFSET $3', [name + '%', numberOfResults, offset]);
         let users: User[] = [];
         for (let i = 0; i < results.rowCount; i++) {
             users.push(new User(results.rows[i].id, results.rows[i].name));
@@ -99,8 +99,13 @@ export class UserDriverPostgres implements IUserDriver {
         return results.rows[0].count;     
     }
 
-    async fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]> {
-        var results = await this.pool.query('SELECT id, name FROM "UserInfo" where id in (SELECT infoId FROM "User" where username in (SELECT friendUsername from "User_Friends" where username=$1)) LIMIT $2 OFFSET $3', [username, numberOfResults, offset]);
+    async fetchFriends(username: string, numberOfResults: number, offset: number, name?: string): Promise<User[]> {
+        var results;
+        if (!name) { 
+            results = await this.pool.query('SELECT id, name FROM "UserInfo" where id in (SELECT infoId FROM "User" where username in (SELECT friendUsername from "User_Friends" where username=$1)) ORDER BY name, id LIMIT $2 OFFSET $3', [username, numberOfResults, offset]);
+        } else {
+            results = await this.pool.query('SELECT id, name FROM "UserInfo" where id in (SELECT infoId FROM "User" where username in (SELECT friendUsername from "User_Friends" where username=$1)) AND name like $2 ORDER BY name, id LIMIT $3 OFFSET $4', [username, '%' + name + '%', numberOfResults, offset]);
+        }
         let users: User[] = [];
         for (let i = 0; i < results.rowCount; i++) {
             let userData = results.rows[i];

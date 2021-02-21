@@ -80,7 +80,7 @@ export interface IUserDriver {
     fetchUser(username: string): Promise<User>;
     findUserByName(name: string, numberOfResults: number, offset: number): Promise<User[]>;
     fetchNumberOfFriends(username: string): Promise<number>;
-    fetchFriends(username: string, numberOfResults: number, offset: number): Promise<User[]>;
+    fetchFriends(username: string, numberOfResults: number, offset: number, name?: string): Promise<User[]>;
     sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation>;
     fetchUsernameFromInfoId(infoId: number): Promise<string>;
     acceptFriendRequest(senderUsername: string, recipientUsername: string): Promise<void>;

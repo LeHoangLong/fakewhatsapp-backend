@@ -71,9 +71,11 @@ export class UserView {
         let name: string = request.query.name as string;
         try {
             let users = await this.controller.findUserByName(name, request.context.paginationSize, request.context.paginationOffset);
-            let ret: Object[] = [];
+            let ret = {
+                rows: [] as Object[],
+            };
             users.forEach((element) => {
-                ret.push(element.toPlainObject());
+                ret.rows.push(element.toPlainObject());
             });
             return response.status(200).send(ret);
         } catch (err) {
@@ -84,7 +86,8 @@ export class UserView {
 
     async fetchFriends(request: express.Request, response: express.Response) {
         try {
-            let [users, count] = await this.controller.fetchFriends(request.context.username, request.context.paginationSize, request.context.paginationOffset, request.context.getCount);
+            let name: any = request.query.name;
+            let [users, count] = await this.controller.fetchFriends(request.context.username, request.context.paginationSize, request.context.paginationOffset, request.context.getCount, name);
             let userData: Object[] = [];
             users.forEach((element) => {
                 userData.push(element.toPlainObject());
