@@ -7,4 +7,7 @@ export const TYPES = {
     JwtDuration: Symbol.for("JwtDuration"),
     JwtAuthentication: Symbol.for("JwtAuthentication"),
     UserAuthorization: Symbol.for("UserAuthorization"),
+    InvitationDriver: Symbol.for("InvitationDriver"),
+    InvitationController: Symbol.for("InvitationController"),
+    InvitationView: Symbol.for("InvitationView"),
 };

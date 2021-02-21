@@ -9,6 +9,9 @@ import { UserView } from './view/UserView';
 import "reflect-metadata";
 import { JwtAuthentication } from './middleware/JwtAuthentication';
 import { UserAuthorization } from "./middleware/UserAuthorization";
+import { InvitationDriverPostgres } from "./driver/InvitationDriverPostgres";
+import { InvitationController } from "./controller/InvitationController";
+import { InvitationView } from "./view/InvitationView";
 
 export const myContainer = new Container();
 myContainer.bind<IUserDriver>(TYPES.UserDriver).to(UserDriverPostgres).inSingletonScope();
@@ -19,3 +22,6 @@ myContainer.bind<string>(TYPES.JwtSecretKey).toConstantValue("VHOL0kMJmIbsZyRPGP
 myContainer.bind<number>(TYPES.JwtDuration).toConstantValue(24 * 3600 * 5);
 myContainer.bind<JwtAuthentication>(TYPES.JwtAuthentication).to(JwtAuthentication).inSingletonScope();
 myContainer.bind<UserAuthorization>(TYPES.UserAuthorization).to(UserAuthorization).inSingletonScope();
+myContainer.bind<InvitationDriverPostgres>(TYPES.InvitationDriver).to(InvitationDriverPostgres).inSingletonScope();
+myContainer.bind<InvitationController>(TYPES.InvitationController).to(InvitationController).inSingletonScope();
+myContainer.bind<InvitationView>(TYPES.InvitationView).to(InvitationView).inSingletonScope();

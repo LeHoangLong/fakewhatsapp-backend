@@ -114,11 +114,13 @@ export class UserDriverPostgres implements IUserDriver {
         return users;
     }
 
+    /*
     async sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation> {
-        await this.pool.query('CALL createinvitation($1, $2)', [senderUsername, recipientUsername]);
+        let result = await this.pool.query('CALL createinvitation($1, $2) RETURNING id', [senderUsername, recipientUsername]);
         //if success, then return an invitation object
-        return new Invitation(senderUsername, recipientUsername);
+        return new Invitation(result.rows[0].id, senderUsername, recipientUsername);
     }
+    */
     
     async fetchUsernameFromInfoId(infoId: number): Promise<string> {
         let result = await this.pool.query('SELECT username from "UserInfo" where id=$1', [infoId]);

@@ -1,5 +1,5 @@
 {
-  "lastRun": "1613769416257-add-accept-invitation-procedure.js",
+  "lastRun": "1613929755510-add-find-invitation-function.js",
   "migrations": [
     {
       "title": "1613490731203-create-initial-model.js",
@@ -16,6 +16,14 @@
     {
       "title": "1613769416257-add-accept-invitation-procedure.js",
       "timestamp": 1613770980471
+    },
+    {
+      "title": "1613928193336-add-created-time-to-invitation.js",
+      "timestamp": 1613939682990
+    },
+    {
+      "title": "1613929755510-add-find-invitation-function.js",
+      "timestamp": 1613939682997
     }
   ]
 }

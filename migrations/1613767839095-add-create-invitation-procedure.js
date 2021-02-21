@@ -12,18 +12,18 @@ module.exports.up = async function (next) {
       LANGUAGE plpgsql
       AS $procedure$
         begin
-          if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and receipientusername=iRecipientUsername) > 0 then	
-            insert into "SentInvitation" (senderusername, receipientusername) values (iSenderUsername, iRecipientUsername);	
+          if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) > 0 then	
+            insert into "SentInvitation" (senderusername, recipientusername) values (iSenderUsername, iRecipientUsername);	
           end if;
-          if (select count(*) from "PendingInvitation" where senderusername=iSenderUsername and receipientusername=iRecipientUsername) > 0 then	
-            insert into "PendingInvitation" (senderusername, receipientusername) values (iSenderUsername, iRecipientUsername);
+          if (select count(*) from "PendingInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) > 0 then	
+            insert into "PendingInvitation" (senderusername, recipientusername) values (iSenderUsername, iRecipientUsername);
           end if;
         END;
       $procedure$;
     `);
-    client.query('COMMIT');
+    await client.query('COMMIT');
   } catch (err) {
-    client.query('ROLLBACK');
+    await client.query('ROLLBACK');
   } finally {
     client.release();
   }

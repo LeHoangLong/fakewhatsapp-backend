@@ -2,7 +2,6 @@ import express = require('express');
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { UserController, UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword, UserControllerErrorNoSuchInfoId, UserControllerErrorUserDeleted, UserControllerErrorUsernameAlreadyExistsWhenSignUp, UserControllerErrorUsernameNotFound } from '../controller/UserController';
-import config from '../../config.json';
 import { IUserDriverErrorNoSuchInvitation } from '../driver/IUserDriver';
 
 @injectable()
@@ -108,7 +107,7 @@ export class UserView {
     async sendFriendRequest(request: express.Request, response: express.Response) {
         try {
             let friendInfoId: number = request.body.friendInfoId;
-            await this.controller.sendFriendRequestIfNotYet(request.context.username, friendInfoId);
+            //await this.controller.sendFriendRequestIfNotYet(request.context.username, friendInfoId);
             return response.status(200).send();
         } catch (err) {
             if (err instanceof UserControllerErrorUserDeleted) {

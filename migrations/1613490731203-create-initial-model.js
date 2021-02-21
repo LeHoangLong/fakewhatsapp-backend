@@ -31,12 +31,12 @@ module.exports.up = async function (next) {
 
     await client.query('CREATE TABLE "SentInvitation" (\
       senderUsername TEXT REFERENCES "User"(username) ON DELETE CASCADE,\
-      receipientUsername TEXT REFERENCES "User"(username) ON DELETE CASCADE\
+      recipientUsername TEXT REFERENCES "User"(username) ON DELETE CASCADE\
     )');
     
     await client.query('CREATE TABLE "ReceivedInvitation" (\
       senderUsername TEXT REFERENCES "User"(username) ON DELETE CASCADE,\
-      receipientUsername TEXT REFERENCES "User"(username) ON DELETE CASCADE\
+      recipientUsername TEXT REFERENCES "User"(username) ON DELETE CASCADE\
     )');
 
     await client.query('CREATE TABLE "Chat" (\

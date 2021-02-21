@@ -12,22 +12,22 @@ module.exports.up = async function (next) {
       LANGUAGE plpgsql
       AS $procedure$
         begin
-          if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and receipientusername=iRecipientUsername) = 0 then
+          if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) = 0 then
             raise 'NO_SUCH_INVITATION' using detail = 'No invitation from ' || iSenderUsername || ' to ' || iRecipientUsername; 
           else
-            delete from "SentInvitation" where senderusername=iSenderUsername and receipientusername=iRecipientUsername;
-            delete from "ReceivedInvitation" where senderusername=iSenderUsername and receipientusername=iRecipientUsername;
+            delete from "SentInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername;
+            delete from "ReceivedInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername;
             insert into "User_Friends" (username, friendusername) values (iSenderUsername, iRecipientUsername);
             insert into "User_Friends" (username, friendusername) values (iRecipientUsername, iSenderUsername);
           end if;
         END;
       $procedure$;
     `);
-    client.query('COMMIT');
+    await client.query('COMMIT');
   } catch (err) {
-    client.query('ROLLBACK');
+    await client.query('ROLLBACK');
   } finally {
-    client.release();
+    await client.release();
   }
 }
 

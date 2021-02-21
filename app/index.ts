@@ -3,14 +3,17 @@ import express = require('express');
 import { myContainer } from './inversify.config';
 import { JwtAuthentication } from './middleware/JwtAuthentication';
 import { router as UserRouter } from './router/UserRouter';
+import { router as InvitationRouter } from './router/InvitationRouter';
 import { TYPES } from './types';
 import cookies from 'cookie-parser';
 import { generateContext } from './middleware/Context';
 import { generatePaginationParams } from './middleware/PaginationParams';
+import { UserAuthorization } from './middleware/UserAuthorization';
 
 // Create a new express application instance
 const app: express.Application = express();
 const jwtAuthentication = myContainer.get<JwtAuthentication>(TYPES.JwtAuthentication);
+const userAuthorization: UserAuthorization = myContainer.get<UserAuthorization>(TYPES.UserAuthorization);
 
 app.use(express.json());
 app.use(cookies());
@@ -29,7 +32,9 @@ app.use(async (req, res, next) => {
   await new Promise(resolve => setTimeout(resolve, 100));
   next();
 });
+
 app.use('/user', UserRouter);
+app.use('/invitations', userAuthorization.authorize, InvitationRouter);
 
 app.listen(8000, async function () {
   console.log('Example app listening on port 8000!');
