@@ -21,4 +21,5 @@ export interface IInvitationDriver {
     rollback(): Promise<void>;
     stopTransaction(): Promise<void>;
     acceptFriendRequest(senderUsername: string, recipientUsername: string): Promise<void>;
+    deleteSentFriendRequest(senderUsername: string, recipientUsername: string): Promise<void>;
 }

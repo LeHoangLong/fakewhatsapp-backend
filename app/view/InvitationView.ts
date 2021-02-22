@@ -47,4 +47,18 @@ export class InvitationView {
             }
         }
     }
+
+    async postDeleteSentInvitation(request: Request, response: Response) {
+        try {
+            if (!('recipientInfoId' in request.body)) {
+                return response.status(400).send();
+            }
+            let recipientInfoId = parseInt(request.body.recipientInfoId);
+            await this.controller.deleteSentFriendRequest(request.context.username, recipientInfoId);
+            return response.status(204).send();
+        } catch (error) {
+            response.status(502).send(error.toString());
+            throw error;
+        }
+    }
 }

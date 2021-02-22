@@ -14,3 +14,7 @@ router.get('/to-from/:userInfoId', (req, res) => {
 router.post('/sentInvitations/', (req, res) => {
     myContainer.get<InvitationView>(TYPES.InvitationView).postInvitation(req, res);
 })
+
+router.post('/deletedInvitations', (req, res) => {
+    myContainer.get<InvitationView>(TYPES.InvitationView).postDeleteSentInvitation(req, res);
+});

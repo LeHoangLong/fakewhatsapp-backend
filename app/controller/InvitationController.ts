@@ -57,4 +57,9 @@ export class InvitationController {
         return this.driver.acceptFriendRequest(senderUsername, recipientUsername);
     }
     */
+
+    async deleteSentFriendRequest(senderUsername: string, recipientInfoId: number): Promise<void> {
+        let recipientUsername = await this.userDriver.fetchUsernameFromInfoId(recipientInfoId);
+        return this.invitationDriver.deleteSentFriendRequest(senderUsername, recipientUsername);
+    }
 }

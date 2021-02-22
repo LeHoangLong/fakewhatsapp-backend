@@ -65,8 +65,6 @@ export class InvitationDriverPostgres implements IInvitationDriver {
     async sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation> {
         if (this.client) {
             let invitationResult = await this.client.query('SELECT * FROM createinvitation($1, $2)', [senderUsername, recipientUsername]);
-            console.log('invitationResult.rows');
-            console.log(invitationResult.rows);
             //if success, then return an invitation object
             return new Invitation(
                 invitationResult.rows[0].createdtime,
@@ -93,5 +91,9 @@ export class InvitationDriverPostgres implements IInvitationDriver {
         } else {
             throw new IInvitationErrorFuncionMustBeCalledInTransaction();
         }
+    }
+
+    async deleteSentFriendRequest(senderUsername: string, recipientUsername: string): Promise<void> {
+        await this.pool.query('DELETE FROM "SentInvitation" where senderUsername=$1 and recipientUsername=$2', [senderUsername, recipientUsername]);
     }
 }
