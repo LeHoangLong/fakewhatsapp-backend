@@ -11,8 +11,8 @@ export {
 @injectable()
 export class InvitationController {
     constructor(
-        @inject(TYPES.InvitationDriver) public invitationDriver: IInvitationDriver,
-        @inject(TYPES.UserDriver) public userDriver: IUserDriver,
+        @inject(TYPES.InvitationDriver) private invitationDriver: IInvitationDriver,
+        @inject(TYPES.UserDriver) private userDriver: IUserDriver,
     ) {
 
     }

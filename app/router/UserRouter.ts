@@ -22,10 +22,3 @@ router.get('/find', userAuthorization.authorize, (req, res) => {
 router.get('/friends', userAuthorization.authorize, (req, res) => {
     myContainer.get<UserView>(TYPES.UserView).fetchFriends(req, res);
 });
-router.post('/friend-request', userAuthorization.authorize, (req, res) => {
-    myContainer.get<UserView>(TYPES.UserView).sendFriendRequest(req, res);
-});
-router.post('/accepted-friend-request', userAuthorization.authorize, (req, res) => {
-    myContainer.get<UserView>(TYPES.UserView).acceptFriendRequest(req, res);
-});
-

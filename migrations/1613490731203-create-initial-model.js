@@ -51,7 +51,7 @@ module.exports.up = async function (next) {
     )')
 
     await client.query('ALTER TABLE "Chat"\
-      ADD CONSTRAINT Chat_latestMessageId_fk FOREIGN KEY (latestMessageId) REFERENCES "Message"(id)\
+      ADD CONSTRAINT Chat_latestMessageId_fk FOREIGN KEY (latestMessageId) REFERENCES "Message"(id) ON DELETE SET NULL,\
     ');
 
     await client.query('CREATE TABLE "User_Chat" (\

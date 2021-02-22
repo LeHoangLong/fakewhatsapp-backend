@@ -1,5 +1,5 @@
 {
-  "lastRun": "1613929755510-add-find-invitation-function.js",
+  "lastRun": "1614017625635-add-sentTime-on-message-chatid.js",
   "migrations": [
     {
       "title": "1613490731203-create-initial-model.js",
@@ -24,6 +24,14 @@
     {
       "title": "1613929755510-add-find-invitation-function.js",
       "timestamp": 1613939682997
+    },
+    {
+      "title": "1614017087789-add-index-on-message-chatid.js",
+      "timestamp": 1614017269594
+    },
+    {
+      "title": "1614017625635-add-sentTime-on-message-chatid.js",
+      "timestamp": 1614019197808
     }
   ]
 }

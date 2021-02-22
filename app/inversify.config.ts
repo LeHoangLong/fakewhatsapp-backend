@@ -12,6 +12,9 @@ import { UserAuthorization } from "./middleware/UserAuthorization";
 import { InvitationDriverPostgres } from "./driver/InvitationDriverPostgres";
 import { InvitationController } from "./controller/InvitationController";
 import { InvitationView } from "./view/InvitationView";
+import { ChatDriverPostgres } from "./driver/ChatDriverPostgres";
+import { ChatController } from "./controller/ChatController";
+import { ChatView } from "./view/ChatView";
 
 export const myContainer = new Container();
 myContainer.bind<IUserDriver>(TYPES.UserDriver).to(UserDriverPostgres).inSingletonScope();
@@ -25,3 +28,7 @@ myContainer.bind<UserAuthorization>(TYPES.UserAuthorization).to(UserAuthorizatio
 myContainer.bind<InvitationDriverPostgres>(TYPES.InvitationDriver).to(InvitationDriverPostgres);
 myContainer.bind<InvitationController>(TYPES.InvitationController).to(InvitationController);
 myContainer.bind<InvitationView>(TYPES.InvitationView).to(InvitationView);
+myContainer.bind<ChatDriverPostgres>(TYPES.ChatDriver).to(ChatDriverPostgres);
+myContainer.bind<ChatController>(TYPES.ChatController).to(ChatController);
+myContainer.bind<ChatView>(TYPES.ChatView).to(ChatView);
+

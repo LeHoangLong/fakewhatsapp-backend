@@ -4,6 +4,7 @@ import { myContainer } from './inversify.config';
 import { JwtAuthentication } from './middleware/JwtAuthentication';
 import { router as UserRouter } from './router/UserRouter';
 import { router as InvitationRouter } from './router/InvitationRouter';
+import { router as ChatRouter } from './router/ChatRouter';
 import { TYPES } from './types';
 import cookies from 'cookie-parser';
 import { generateContext } from './middleware/Context';
@@ -35,6 +36,7 @@ app.use(async (req, res, next) => {
 
 app.use('/user', UserRouter);
 app.use('/invitations', userAuthorization.authorize, InvitationRouter);
+app.use('/chats', userAuthorization.authorize, ChatRouter);
 
 app.listen(8000, async function () {
   console.log('Example app listening on port 8000!');

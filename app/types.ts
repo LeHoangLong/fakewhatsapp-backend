@@ -10,4 +10,7 @@ export const TYPES = {
     InvitationDriver: Symbol.for("InvitationDriver"),
     InvitationController: Symbol.for("InvitationController"),
     InvitationView: Symbol.for("InvitationView"),
+    ChatDriver: Symbol.for("ChatDriver"),
+    ChatController: Symbol.for("ChatController"),
+    ChatView: Symbol.for("ChatView"),
 };

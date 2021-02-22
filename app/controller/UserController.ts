@@ -23,7 +23,7 @@ export class UserControllerErrorAuthentiationFailedWithGivenUsernameAndPassword 
 
 @injectable()
 export class UserController {
-    driver: IUserDriver;
+    private driver: IUserDriver;
     private jwtAuthentication: JwtAuthentication;
     constructor(
         @inject(TYPES.UserDriver) driver: IUserDriver,
