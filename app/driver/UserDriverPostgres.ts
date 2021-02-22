@@ -113,14 +113,6 @@ export class UserDriverPostgres implements IUserDriver {
         }
         return users;
     }
-
-    /*
-    async sendFriendRequestIfNotYet(senderUsername: string, recipientUsername: string): Promise<Invitation> {
-        let result = await this.pool.query('CALL createinvitation($1, $2) RETURNING id', [senderUsername, recipientUsername]);
-        //if success, then return an invitation object
-        return new Invitation(result.rows[0].id, senderUsername, recipientUsername);
-    }
-    */
     
     async fetchUsernameFromInfoId(infoId: number): Promise<string> {
         let result = await this.pool.query('SELECT username from "UserInfo" where id=$1', [infoId]);
@@ -131,18 +123,6 @@ export class UserDriverPostgres implements IUserDriver {
                 throw new IUserDriverErrorUserDeleted(infoId);
             } else {
                 return result.rows[0].username;
-            }
-        }
-    }
-    
-    async acceptFriendRequest(senderUsername: string, recipientUsername: string): Promise<void> {
-        try {
-            this.pool.query('CALL acceptinvitation($1, $2)', [senderUsername, recipientUsername]);
-        } catch (error) {
-            if (error.message === 'NO_SUCH_INVITATION') {
-                throw new IUserDriverErrorNoSuchInvitation(senderUsername, recipientUsername);
-            } else {
-                throw error;
             }
         }
     }

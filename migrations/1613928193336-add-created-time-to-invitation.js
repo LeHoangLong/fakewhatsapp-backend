@@ -8,7 +8,7 @@ module.exports.up = async function (next) {
   try {
     await client.query('BEGIN');
     await client.query('ALTER TABLE "SentInvitation" ADD createdTime TIMESTAMP DEFAULT NOW()');
-    await client.query('ALTER TABLE "PendingInvitation" ADD createdTime TIMESTAMP DEFAULT NOW()');
+    await client.query('ALTER TABLE "ReceivedInvitation" ADD createdTime TIMESTAMP DEFAULT NOW()');
     await client.query('COMMIT');
   } catch (err) {
     await client.query('ROLLBACK');

@@ -15,7 +15,7 @@ module.exports.up = async function (next) {
           begin
             drop table if exists findInvitationResult;
             create temp table findInvitationResult as select si.createdTime, si.senderUsername, si.recipientUsername from "SentInvitation" si
-              where (senderusername=username1 and recipientusername =username2) or (senderusername=username2 or recipientusername=username1)
+              where (senderusername=username1 and recipientusername =username2) or (senderusername=username2 and recipientusername=username1)
               limit 1;
             select infoId into senderInfoId from "User" where username in (select senderUsername from findInvitationResult);
             select infoId into recipientInfoId from "User" where username in (select recipientUsername from findInvitationResult);

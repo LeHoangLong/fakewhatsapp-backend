@@ -8,18 +8,22 @@ module.exports.up = async function (next) {
   try {
     client.query('BEGIN');
     client.query(`
-      CREATE OR REPLACE PROCEDURE public.createinvitation(iSenderUsername text, iRecipientUsername text)
-      LANGUAGE plpgsql
-      AS $procedure$
+      CREATE OR REPLACE function public.createinvitation(iSenderUsername text, iRecipientUsername text, out createdtime timestamp, out senderInfoId integer, out recipientInfoId integer)
+        LANGUAGE plpgsql
+        AS $function$
         begin
-          if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) > 0 then	
-            insert into "SentInvitation" (senderusername, recipientusername) values (iSenderUsername, iRecipientUsername);	
+          if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) = 0 then	
+              insert into "SentInvitation" as si (senderusername, recipientusername) values (iSenderUsername, iRecipientUsername) returning si.createdtime into createdtime;	
           end if;
-          if (select count(*) from "PendingInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) > 0 then	
-            insert into "PendingInvitation" (senderusername, recipientusername) values (iSenderUsername, iRecipientUsername);
+          if (select count(*) from "ReceivedInvitation" ri where senderusername=iSenderUsername and recipientusername=iRecipientUsername) = 0 then	
+            insert into "ReceivedInvitation" (senderusername, recipientusername) values (iSenderUsername, iRecipientUsername);
           end if;
-        END;
-      $procedure$;
+          
+          select infoId into senderInfoId from "User" where username=iSenderUsername;
+          select infoId into recipientInfoId from "User" where username=iRecipientUsername;
+          
+          END;
+        $function$;
     `);
     await client.query('COMMIT');
   } catch (err) {

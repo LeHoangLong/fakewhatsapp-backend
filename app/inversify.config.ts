@@ -22,6 +22,6 @@ myContainer.bind<string>(TYPES.JwtSecretKey).toConstantValue("VHOL0kMJmIbsZyRPGP
 myContainer.bind<number>(TYPES.JwtDuration).toConstantValue(24 * 3600 * 5);
 myContainer.bind<JwtAuthentication>(TYPES.JwtAuthentication).to(JwtAuthentication).inSingletonScope();
 myContainer.bind<UserAuthorization>(TYPES.UserAuthorization).to(UserAuthorization).inSingletonScope();
-myContainer.bind<InvitationDriverPostgres>(TYPES.InvitationDriver).to(InvitationDriverPostgres).inSingletonScope();
-myContainer.bind<InvitationController>(TYPES.InvitationController).to(InvitationController).inSingletonScope();
-myContainer.bind<InvitationView>(TYPES.InvitationView).to(InvitationView).inSingletonScope();
+myContainer.bind<InvitationDriverPostgres>(TYPES.InvitationDriver).to(InvitationDriverPostgres);
+myContainer.bind<InvitationController>(TYPES.InvitationController).to(InvitationController);
+myContainer.bind<InvitationView>(TYPES.InvitationView).to(InvitationView);

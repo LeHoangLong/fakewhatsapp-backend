@@ -10,3 +10,7 @@ export const router: express.Router = express.Router();
 router.get('/to-from/:userInfoId', (req, res) => {
     myContainer.get<InvitationView>(TYPES.InvitationView).getInvitationForSpecificUser(req, res);
 });
+
+router.post('/sentInvitations/', (req, res) => {
+    myContainer.get<InvitationView>(TYPES.InvitationView).postInvitation(req, res);
+})

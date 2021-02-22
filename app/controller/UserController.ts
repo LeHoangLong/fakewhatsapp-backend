@@ -64,16 +64,4 @@ export class UserController {
         }
         return [users, count];
     }
-
-    /*
-    async sendFriendRequestIfNotYet(senderUsername: string, recipientInfoId: number): Promise<Invitation>{
-        let recipientUsername = await this.driver.fetchUsernameFromInfoId(recipientInfoId);
-        return this.driver.sendFriendRequestIfNotYet(senderUsername, recipientUsername);
-    }
-    */
-
-    async acceptFriendRequest(recipientUsername: string, senderInfoId: number): Promise<void> {
-        let senderUsername = await this.driver.fetchUsernameFromInfoId(senderInfoId);
-        return this.driver.acceptFriendRequest(senderUsername, recipientUsername);
-    }
 }
