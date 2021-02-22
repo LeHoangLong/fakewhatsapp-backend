@@ -1,7 +1,7 @@
 import { Request, Response} from "express";
 import { inject, injectable } from "inversify";
 import { InvitationController, InvitationControllerErrorInvitationNotFound } from "../controller/InvitationController";
-import { IInvitationErrorInvitationPendingFromOtherUser } from "../driver/IInvitationDriver";
+import { IInvitationErrorInvitationNotFound, IInvitationErrorInvitationPendingFromOtherUser } from "../driver/IInvitationDriver";
 import { TYPES } from "../types";
 
 @injectable()
@@ -59,6 +59,37 @@ export class InvitationView {
         } catch (error) {
             response.status(502).send(error.toString());
             throw error;
+        }
+    }
+
+    async postDeletePendingInvitation(request: Request, response: Response) {
+        try {
+            if (!('senderInfoId' in request.body)) {
+                return response.status(400).send();
+            }
+            let senderInfoId = parseInt(request.body.senderInfoId);
+            await this.controller.rejectFriendRequest(request.context.username, senderInfoId);
+            return response.status(204).send();
+        } catch (error) {
+            response.status(502).send(error.toString());
+            throw error;
+        }
+    }
+    async postAcceptedInvitation(request: Request, response: Response) {
+        try {
+            if (!('senderInfoId' in request.body)) {
+                return response.status(400).send();
+            }
+            let senderInfoId = parseInt(request.body.senderInfoId);
+            await this.controller.acceptFriendRequest(request.context.username, senderInfoId);
+            return response.status(200).send();
+        } catch (error) {
+            if (error instanceof IInvitationErrorInvitationNotFound) {
+                return response.status(404).send();
+            } else {
+                response.status(502).send(error.toString());
+                throw error;
+            }
         }
     }
 }

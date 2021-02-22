@@ -1,15 +1,27 @@
 import { Invitation } from "../model/Invitation";
 
 export class IInvitationErrorInvitationNotFound {
-
+    toString() {
+        return 'Invitation not found';
+    }
 }
 
 export class IInvitationErrorFuncionMustBeCalledInTransaction {
+    constructor (
+        public functionName: string,
+    ) {
 
+    }
+
+    toString() {
+        return `Function ${this.functionName} must be called in transaction`
+    }
 }
 
 export class IInvitationErrorInvitationPendingFromOtherUser {
-    
+    toString() {
+        return 'The other user has already sent a friend request';
+    }
 }
 
 export interface IInvitationDriver {

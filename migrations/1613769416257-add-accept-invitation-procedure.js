@@ -8,10 +8,11 @@ module.exports.up = async function (next) {
   try {
     client.query('BEGIN');
     client.query(`
-      CREATE OR REPLACE PROCEDURE public.acceptinvitation(iSenderUsername text, iRecipientUsername text)
-      LANGUAGE plpgsql
-      AS $procedure$
-        begin
+    CREATE OR REPLACE FUNCTION public.acceptinvitation(isenderusername text, irecipientusername text)
+        RETURNS void
+        LANGUAGE plpgsql
+      AS $function$
+        BEGIN
           if (select count(*) from "SentInvitation" where senderusername=iSenderUsername and recipientusername=iRecipientUsername) = 0 then
             raise 'NO_SUCH_INVITATION' using detail = 'No invitation from ' || iSenderUsername || ' to ' || iRecipientUsername; 
           else
@@ -21,7 +22,7 @@ module.exports.up = async function (next) {
             insert into "User_Friends" (username, friendusername) values (iRecipientUsername, iSenderUsername);
           end if;
         END;
-      $procedure$;
+      $function$;
     `);
     await client.query('COMMIT');
   } catch (err) {

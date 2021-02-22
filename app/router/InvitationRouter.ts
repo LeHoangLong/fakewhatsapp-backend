@@ -18,3 +18,11 @@ router.post('/sentInvitations/', (req, res) => {
 router.post('/deletedInvitations', (req, res) => {
     myContainer.get<InvitationView>(TYPES.InvitationView).postDeleteSentInvitation(req, res);
 });
+
+router.post('/rejectedInvitations', (req, res) => {
+    myContainer.get<InvitationView>(TYPES.InvitationView).postDeletePendingInvitation(req, res);
+});
+
+router.post('/acceptedInvitations', (req, res) => {
+    myContainer.get<InvitationView>(TYPES.InvitationView).postAcceptedInvitation(req, res);
+});

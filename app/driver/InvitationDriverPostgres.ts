@@ -58,7 +58,7 @@ export class InvitationDriverPostgres implements IInvitationDriver {
                 return false;
             }
         } else {
-            throw new IInvitationErrorFuncionMustBeCalledInTransaction();
+            throw new IInvitationErrorFuncionMustBeCalledInTransaction('fetchDoesSentFriendRequestExist');
         }
     }
 
@@ -72,28 +72,25 @@ export class InvitationDriverPostgres implements IInvitationDriver {
                 invitationResult.rows[0].recipientinfoid,
             )
         } else {
-            throw new IInvitationErrorFuncionMustBeCalledInTransaction();
+            throw new IInvitationErrorFuncionMustBeCalledInTransaction('sendFriendRequest');
         }
     }
     
     
     async acceptFriendRequest(senderUsername: string, recipientUsername: string): Promise<void> {
-        if (this.client) {
-            try {
-                this.client.query('CALL acceptinvitation($1, $2)', [senderUsername, recipientUsername]);
-            } catch (error) {
-                if (error.message === 'NO_SUCH_INVITATION') {
-                    throw new IInvitationErrorInvitationNotFound();
-                } else {
-                    throw error;
-                }
+        try {
+            this.pool.query('SELECT acceptinvitation($1, $2)', [senderUsername, recipientUsername]);
+        } catch (error) {
+            if (error.message === 'NO_SUCH_INVITATION') {
+                throw new IInvitationErrorInvitationNotFound();
+            } else {
+                throw error;
             }
-        } else {
-            throw new IInvitationErrorFuncionMustBeCalledInTransaction();
         }
     }
 
     async deleteSentFriendRequest(senderUsername: string, recipientUsername: string): Promise<void> {
         await this.pool.query('DELETE FROM "SentInvitation" where senderUsername=$1 and recipientUsername=$2', [senderUsername, recipientUsername]);
+        await this.pool.query('DELETE FROM "ReceivedInvitation" where senderUsername=$1 and recipientUsername=$2', [senderUsername, recipientUsername]);
     }
 }

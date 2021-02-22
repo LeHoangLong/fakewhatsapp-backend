@@ -5,7 +5,7 @@ import { Invitation } from "../model/Invitation";
 import { TYPES } from "../types";
 
 export {
-    IInvitationErrorInvitationNotFound as InvitationControllerErrorInvitationNotFound
+    IInvitationErrorInvitationNotFound as InvitationControllerErrorInvitationNotFound,
 } from '../driver/IInvitationDriver';
 
 @injectable()
@@ -51,15 +51,20 @@ export class InvitationController {
         }
     }
     
-    /*
-    async acceptFriendRequest(recipientUsername: string, senderInfoId: number): Promise<Invitation> {
-        let senderUsername = await this.driver.fetchUsernameFromInfoId(senderInfoId);
-        return this.driver.acceptFriendRequest(senderUsername, recipientUsername);
+    
+    async acceptFriendRequest(recipientUsername: string, senderInfoId: number): Promise<void> {
+        let senderUsername = await this.userDriver.fetchUsernameFromInfoId(senderInfoId);
+        await this.invitationDriver.acceptFriendRequest(senderUsername, recipientUsername);
     }
-    */
+    
 
     async deleteSentFriendRequest(senderUsername: string, recipientInfoId: number): Promise<void> {
         let recipientUsername = await this.userDriver.fetchUsernameFromInfoId(recipientInfoId);
-        return this.invitationDriver.deleteSentFriendRequest(senderUsername, recipientUsername);
+        await this.invitationDriver.deleteSentFriendRequest(senderUsername, recipientUsername);
+    }
+
+    async rejectFriendRequest(recipientUsername: string, senderInfoId: number): Promise<void> {
+        let senderUsername = await this.userDriver.fetchUsernameFromInfoId(senderInfoId);
+        await this.invitationDriver.deleteSentFriendRequest(senderUsername, recipientUsername);
     }
 }
