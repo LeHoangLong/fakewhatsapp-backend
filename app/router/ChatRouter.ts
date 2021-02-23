@@ -8,3 +8,7 @@ export const router: express.Router = express.Router();
 router.get('/recent/', (req, res) => {
     myContainer.get<ChatView>(TYPES.ChatView).fetchRecentChats(req, res);
 });
+
+router.get('/conversation/:userInfoId', (req, res) => {
+    myContainer.get<ChatView>(TYPES.ChatView).fetchChatToUser(req, res);
+})
