@@ -1,4 +1,5 @@
 import { Chat } from "../model/Chat";
+import { Message } from "../model/Message";
 
 export class IChatDriverErrorChatBetween2UsersNotFound {
     constructor(
@@ -9,9 +10,13 @@ export class IChatDriverErrorChatBetween2UsersNotFound {
     }
 }
 
+export class IChatDriverErrorChatIdNotFound {
+
+}
+
 export interface IChatDriver {
     fetchChatsForUser(userInfoId: number, limit: number, offset: number): Promise<Chat[]>;
-    createChat(name: string): Promise<Chat>;
+    createChatBetween2Users(name: string, username1: string, userInfoId1: number, username2: string, userInfoId2: number): Promise<Chat>;
     fetchChatBetween2Users(userInfoId1: number, userInfoId2: number): Promise<Chat>;
-    sendMessageToChat(chatId: number): Promise<void>;
+    sendMessageToChat(senderInfoId: number, chatId: number, content: string): Promise<Message>;
 }

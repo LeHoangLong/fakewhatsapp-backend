@@ -4,8 +4,8 @@ export class Chat {
     constructor(
         public id: number,
         public messages: Message[],
-        public latestMessageContent: string | null,
-        public latestMessageSentTime: Date | null,
+        public latestMessageContent: string,
+        public latestMessageSentTime: Date,
         public name: string,
     ) {
 

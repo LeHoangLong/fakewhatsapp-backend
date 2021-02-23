@@ -1,5 +1,5 @@
 {
-  "lastRun": "1614059937122-add-chat-name.js",
+  "lastRun": "1614096439343-add-createdtime-to-chat.js",
   "migrations": [
     {
       "title": "1613490731203-create-initial-model.js",
@@ -36,6 +36,10 @@
     {
       "title": "1614059937122-add-chat-name.js",
       "timestamp": 1614060003455
+    },
+    {
+      "title": "1614096439343-add-createdtime-to-chat.js",
+      "timestamp": 1614096479036
     }
   ]
 }
