@@ -103,44 +103,4 @@ export class UserView {
             throw err;
         }
     }
-
-    async sendFriendRequest(request: express.Request, response: express.Response) {
-        try {
-            let friendInfoId: number = request.body.friendInfoId;
-            //await this.controller.sendFriendRequestIfNotYet(request.context.username, friendInfoId);
-            return response.status(200).send();
-        } catch (err) {
-            if (err instanceof UserControllerErrorUserDeleted) {
-                return response.status(403).send({
-                    'message': 'USER_DELETED'
-                });
-            } else if (err instanceof UserControllerErrorNoSuchInfoId) {
-                response.status(403).send();
-            } else {
-                response.status(502).send(err.toString());
-            }
-            throw err;
-        }
-    }
-
-    async acceptFriendRequest(request: express.Request, response: express.Response) {
-        try {
-            let friendInfoId: number = request.body.friendInfoId;
-            await this.controller.acceptFriendRequest(request.context.username, friendInfoId);
-            return response.status(200).send();
-        } catch (err) {
-            if (err instanceof UserControllerErrorUserDeleted) {
-                return response.status(403).send({
-                    'message': 'USER_DELETED'
-                });
-            } else if (err instanceof IUserDriverErrorNoSuchInvitation) {
-                return response.status(403).send();
-            } else if (err instanceof UserControllerErrorNoSuchInfoId) {
-                return response.status(403).send();
-            } else {
-                response.status(502).send(err.toString());
-            }
-            throw err;
-        }
-    }
 }

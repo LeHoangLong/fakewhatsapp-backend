@@ -5,6 +5,7 @@ export class Chat {
         public id: number,
         public messages: Message[],
         public latestMessageContent: string,
+        public latestMessageSentTime: Date,
     ) {
 
     }
