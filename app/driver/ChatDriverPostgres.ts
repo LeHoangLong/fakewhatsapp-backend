@@ -107,14 +107,27 @@ export class ChatDriverPostgres implements IChatDriver {
         if (!await this.doesChatIdExists(senderInfoId, chatId)) {
             throw new IChatDriverErrorChatIdNotFound();
         }
-        let result = await this.pool.query(`
-            INSERT INTO "Message" ( senderInfoId, chatId, content ) VALUES ($1, $2, $3) RETURNING id, senttime
-        `, [senderInfoId, chatId, content]);
-        return {
-            id: result.rows[0].id,
-            senderInfoId: senderInfoId,
-            content: content,
-            sentTime: result.rows[0].senttime
+        let client = await this.pool.connect();
+        try {
+            await client.query('BEGIN');
+            let result = await client.query(`
+                INSERT INTO "Message" ( senderInfoId, chatId, content ) VALUES ($1, $2, $3) RETURNING id, senttime
+            `, [senderInfoId, chatId, content]);
+            await client.query(`
+                UPDATE "Chat" SET latestmessageid=$1 WHERE id=$2
+            `, [result.rows[0].id, chatId]);
+            await client.query('COMMIT');
+            return {
+                id: result.rows[0].id,
+                senderInfoId: senderInfoId,
+                content: content,
+                sentTime: result.rows[0].senttime
+            }
+        } catch (error) {
+            await client.query('ROLLBACK');
+            throw error;
+        } finally {
+            client.release();
         }
     }
     
