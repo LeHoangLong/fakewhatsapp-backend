@@ -126,4 +126,17 @@ export class UserDriverPostgres implements IUserDriver {
             }
         }
     }
+
+    async fetchUserFromInfoId(infoId: number): Promise<User> {
+        let result = await this.pool.query('SELECT name from "UserInfo" where id=$1', [infoId]);
+        if (result.rowCount == 0) {
+            throw new IUserDriverErrorNoSuchInfoId(infoId);
+        } else {
+            return new User(
+                infoId,
+                result.rows[0].name
+            );
+        }
+    }
+    
 }

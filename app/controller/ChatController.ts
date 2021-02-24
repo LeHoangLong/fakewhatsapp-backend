@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { IChatDriver, IChatDriverErrorChatBetween2UsersNotFound } from "../driver/IChatDriver";
+import { IChatDriver, IChatDriverErrorChatIdNotFound } from "../driver/IChatDriver";
 import { IUserDriver } from "../driver/IUserDriver";
 import { Chat } from "../model/Chat";
 import { Message } from "../model/Message";
@@ -49,5 +49,13 @@ export class ChatController {
         let user1 = await this.userDriver.fetchUser(username1);
         let username2 = await this.userDriver.fetchUsernameFromInfoId(otherUserInfoId);
         return this.chatDriver.createChatBetween2Users('', username1, user1.userInfoId, username2, otherUserInfoId);
+    }
+
+    async fetchMessagesFromChat(username: string, chatId: number, limit: number, offset: number): Promise<Message[]> {
+        let user = await this.userDriver.fetchUser(username);
+        if (!await this.chatDriver.doesChatIdExists(user.userInfoId, chatId)) {
+            throw new IChatDriverErrorChatIdNotFound();
+        }
+        return this.chatDriver.fetchMessagesFromChat(user.userInfoId, chatId, limit, offset);
     }
 }

@@ -56,6 +56,10 @@ export class UserController {
         return this.driver.findUserByName(name, numberOfResults, offset);
     }
 
+    async findUserByInfoId(userInfoId: number): Promise<User> {
+        return this.driver.fetchUserFromInfoId(userInfoId);
+    }
+
     async fetchFriends(username: string, numberOfResults: number, offset: number, getCount: boolean, name?: string): Promise<[User[], number]> {
         let users = await this.driver.fetchFriends(username, numberOfResults, offset, name);
         let count: number = 0;

@@ -82,4 +82,5 @@ export interface IUserDriver {
     fetchNumberOfFriends(username: string): Promise<number>;
     fetchFriends(username: string, numberOfResults: number, offset: number, name?: string): Promise<User[]>;
     fetchUsernameFromInfoId(infoId: number): Promise<string>;
+    fetchUserFromInfoId(infoId: number): Promise<User>;
 }

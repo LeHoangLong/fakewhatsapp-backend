@@ -16,9 +16,16 @@ router.post('/signup', (req, res) => {
 router.get('/info', userAuthorization.authorize, (req, res) => {
     myContainer.get<UserView>(TYPES.UserView).getInfoView(req, res);
 });
+
 router.get('/find', userAuthorization.authorize, (req, res) => {
     myContainer.get<UserView>(TYPES.UserView).findUserByName(req, res);
 });
+
 router.get('/friends', userAuthorization.authorize, (req, res) => {
     myContainer.get<UserView>(TYPES.UserView).fetchFriends(req, res);
 });
+
+router.get('/by-id/:userInfoId', userAuthorization.authorize, (req, res) => {
+    myContainer.get<UserView>(TYPES.UserView).getUserFromInfoId(req, res);
+});
+

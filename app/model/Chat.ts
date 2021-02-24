@@ -7,6 +7,7 @@ export class Chat {
         public latestMessageContent: string,
         public latestMessageSentTime: Date,
         public name: string,
+        public participantsId: number[],
     ) {
 
     }

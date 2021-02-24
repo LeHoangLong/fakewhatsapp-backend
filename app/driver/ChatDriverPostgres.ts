@@ -17,12 +17,19 @@ export class ChatDriverPostgres implements IChatDriver {
         let result = await this.pool.query('SELECT ch.id, ch.name, m.content, m.senttime FROM "Chat" ch LEFT JOIN "Message" m ON ch.latestmessageid=m.id INNER JOIN "User_Chat" uc ON (ch.id=uc.chatid AND uc.userinfoid=$1) ORDER BY m.senttime DESC LIMIT $2 OFFSET $3', [userInfoId, limit, offset]);
         let ret: Chat[] = [];
         for (let i = 0; i < result.rowCount; i++) {
+            let chatId: number = result.rows[i].id;
+            let participantResult = await this.pool.query('SELECT userInfoId from "User_Chat" WHERE chatid=$1', [chatId]);
+            let pariticipantIds: number[] = [];
+            for (let j = 0; j < participantResult.rowCount; j++) {
+                pariticipantIds.push(participantResult.rows[j].userinfoid);
+            }
             let chat: Chat = new Chat(
-                result.rows[i].id, 
+                chatId, 
                 [], 
                 result.rows[i].content,
                 result.rows[i].senttime,
                 result.rows[i].name,
+                pariticipantIds
             );
             ret.push(chat);
         }
@@ -44,6 +51,7 @@ export class ChatDriverPostgres implements IChatDriver {
                 '',
                 result.rows[0].createdtime,
                 result.rows[0].name,
+                [userInfoId1, userInfoId2]
             );
         } catch (error) {
             await client.query('ROLLBACK');
@@ -77,14 +85,13 @@ export class ChatDriverPostgres implements IChatDriver {
             } else {
                 messageSentTime = new Date(result.rows[0].senttime);
             }
-            console.log('result.rows[0]');
-            console.log(result.rows[0]);
             return new Chat(
                 result.rows[0].id,
                 [],
                 messageContent,
                 messageSentTime,
                 result.rows[0].name,
+                [userInfoId1, userInfoId2]
             );
         } else {
             throw new IChatDriverErrorChatBetween2UsersNotFound(userInfoId1, userInfoId2);
@@ -109,5 +116,20 @@ export class ChatDriverPostgres implements IChatDriver {
             content: content,
             sentTime: result.rows[0].senttime
         }
+    }
+    
+    async fetchMessagesFromChat(participantInfoId: number, chatId: number, limit: number, offset: number): Promise<Message[]> {
+        let result = await this.pool.query('SELECT id, senderinfoid, content, senttime FROM "Message" WHERE senderinfoid=$1 AND chatid=$2 ORDER BY senttime DESC LIMIT $3 OFFSET $4', [participantInfoId, chatId, limit, offset]);
+        let ret: Message[] = [];
+        for (let i = 0; i < result.rowCount; i++) {
+            let newMessage: Message = {
+                id: result.rows[i].id,
+                senderInfoId: result.rows[i].senderinfoid,
+                content: result.rows[i].content,
+                sentTime: result.rows[i].senttime,
+            }
+            ret.push(newMessage);
+        }
+        return ret;
     }
 }

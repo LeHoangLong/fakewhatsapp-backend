@@ -103,4 +103,22 @@ export class UserView {
             throw err;
         }
     }
+    
+    async getUserFromInfoId(request: express.Request, response: express.Response) {
+        try {
+            if (!('userInfoId' in request.params)) {
+                return response.status(400).send();
+            }
+            let userInfoId = parseInt(request.params.userInfoId);
+            let user = await this.controller.findUserByInfoId(userInfoId);
+            return response.status(200).send(user.toPlainObject());
+        } catch (error) {
+            if (error instanceof UserControllerErrorNoSuchInfoId) {
+                response.status(404).send();
+            } else {
+                response.status(502).send(error.toString());
+                throw error;
+            }
+        }
+    }
 }

@@ -20,3 +20,7 @@ router.post('/conversation/', (req, res) => {
 router.post('/conversation/:chatId/messages/', (req, res) => {
     myContainer.get<ChatView>(TYPES.ChatView).postMessageToConversation(req, res);
 });
+
+router.get('/conversation/:chatId/messages', (req, res) => {
+    myContainer.get<ChatView>(TYPES.ChatView).getMessageFromChat(req, res);
+})

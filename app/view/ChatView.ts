@@ -85,8 +85,26 @@ export class ChatView {
             } else if (error instanceof ChatControllerChatIdNotFound) {
                 return response.status(404).send();
             }
-            response.status(502).send();
+            response.status(502).send(error.toString());
             throw error;
         }
     }
+
+    async getMessageFromChat(request: Request, response: Response) {
+        try {
+            if (!('chatId' in request.params)) {
+                return response.status(400).send();
+            }
+            let chatId = parseInt(request.params.chatId);
+            let messages = await this.controller.fetchMessagesFromChat(request.context.username, chatId, request.context.paginationSize, request.context.paginationOffset);
+            let ret: any = {
+                rows: messages
+            }
+            return response.status(200).send(ret);
+        } catch (error) {
+            response.status(502).send(error.toString());
+            throw error;
+        }
+    }
+
 }
