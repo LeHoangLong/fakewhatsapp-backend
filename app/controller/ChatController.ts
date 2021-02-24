@@ -56,6 +56,6 @@ export class ChatController {
         if (!await this.chatDriver.doesChatIdExists(user.userInfoId, chatId)) {
             throw new IChatDriverErrorChatIdNotFound();
         }
-        return this.chatDriver.fetchMessagesFromChat(user.userInfoId, chatId, limit, offset);
+        return this.chatDriver.fetchMessagesFromChat(chatId, limit, offset);
     }
 }

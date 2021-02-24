@@ -118,8 +118,8 @@ export class ChatDriverPostgres implements IChatDriver {
         }
     }
     
-    async fetchMessagesFromChat(participantInfoId: number, chatId: number, limit: number, offset: number): Promise<Message[]> {
-        let result = await this.pool.query('SELECT id, senderinfoid, content, senttime FROM "Message" WHERE senderinfoid=$1 AND chatid=$2 ORDER BY senttime DESC LIMIT $3 OFFSET $4', [participantInfoId, chatId, limit, offset]);
+    async fetchMessagesFromChat(chatId: number, limit: number, offset: number): Promise<Message[]> {
+        let result = await this.pool.query('SELECT id, senderinfoid, content, senttime FROM "Message" WHERE chatid=$1 ORDER BY senttime DESC LIMIT $2 OFFSET $3', [chatId, limit, offset]);
         let ret: Message[] = [];
         for (let i = 0; i < result.rowCount; i++) {
             let newMessage: Message = {
