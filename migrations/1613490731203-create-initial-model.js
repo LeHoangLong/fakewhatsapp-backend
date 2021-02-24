@@ -7,6 +7,7 @@ module.exports.up = async function (next) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+    await client.query("SET timezone='utc'");
     await client.query('CREATE TABLE IF NOT EXISTS "UserInfo" (\
       id SERIAL PRIMARY KEY,\
       username TEXT DEFAULT NULL,\
@@ -58,7 +59,7 @@ module.exports.up = async function (next) {
       userInfoId INTEGER REFERENCES "User"(infoId) ON DELETE CASCADE ON UPDATE CASCADE,\
       chatID INTEGER REFERENCES "Chat"(id) ON DELETE CASCADE ON UPDATE CASCADE,\
       username TEXT REFERENCES "User"(username) ON DELETE CASCADE ON UPDATE CASCADE,\
-      joinedTime TIMESTAMP DEFAULT NOW(),\
+      joinedTime TIMESTAMPTZ DEFAULT NOW(),\
       PRIMARY KEY (userInfoId, chatId, username)\
     )')
 

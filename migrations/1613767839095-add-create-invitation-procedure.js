@@ -8,7 +8,7 @@ module.exports.up = async function (next) {
   try {
     client.query('BEGIN');
     client.query(`
-      CREATE OR REPLACE function public.createinvitation(iSenderUsername text, iRecipientUsername text, out createdtime timestamp, out senderInfoId integer, out recipientInfoId integer)
+      CREATE OR REPLACE function public.createinvitation(iSenderUsername text, iRecipientUsername text, out createdtime TIMESTAMPTZ, out senderInfoId integer, out recipientInfoId integer)
         LANGUAGE plpgsql
         AS $function$
         begin

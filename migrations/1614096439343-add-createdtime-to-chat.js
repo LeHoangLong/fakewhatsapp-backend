@@ -9,7 +9,7 @@ module.exports.up = async function (next) {
     await client.query('BEGIN');
     await client.query(`
       ALTER TABLE "Chat"
-      ADD createdTime TIMESTAMP NOT NULL DEFAULT NOW()
+      ADD createdTime TIMESTAMPTZ NOT NULL DEFAULT NOW()
     `)
     await client.query('COMMIT');
   } catch (err) {

@@ -9,7 +9,7 @@ module.exports.up = async function (next) {
     await client.query('BEGIN');
     await client.query(`
       CREATE OR REPLACE FUNCTION public.findinvitation(username1 text, username2 text)
-        RETURNS table (createdTime timestamp, senderInfoId integer, recipientInfoId integer)
+        RETURNS table (createdTime TIMESTAMPTZ, senderInfoId integer, recipientInfoId integer)
         LANGUAGE plpgsql
         AS $function$
           begin

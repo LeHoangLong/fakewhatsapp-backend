@@ -9,7 +9,7 @@ module.exports.up = async function (next) {
     await client.query('BEGIN');
     await client.query(`
       ALTER TABLE "Message" 
-      ADD sentTime TIMESTAMP DEFAULT NOW(), 
+      ADD sentTime TIMESTAMPTZ DEFAULT NOW(), 
       ADD senderInfoId INTEGER REFERENCES "UserInfo"(id) ON DELETE CASCADE ON UPDATE CASCADE
     `)
     await client.query('COMMIT');
