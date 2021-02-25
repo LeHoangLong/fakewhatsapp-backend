@@ -13,14 +13,8 @@ export class ChatView {
 
     async fetchRecentChats(request: Request, response: Response) {
         try {
-            let chats = await this.controller.fetchChatsForUser(request.context.username, request.context.paginationSize, request.context.paginationOffset);
-            let ret: any = {
-                rows: []
-            }
-            for (let i = 0; i < chats.length; i++) {
-                ret.rows.push(chats[i].toPlainObject());
-            }
-            return response.status(200).send(ret);
+            let results = await this.controller.fetchChatsForUser(request.context.username, request.context.paginationSize, request.context.paginationOffset);
+            return response.status(200).send(results);
         } catch (error) {
             response.status(502).send();
             throw error;
@@ -34,7 +28,7 @@ export class ChatView {
             }
             let userInfoId = parseInt(request.params.userInfoId);
             let chat = await this.controller.fetchChatBetween2Users(request.context.username, userInfoId);
-            return response.status(200).send(chat.toPlainObject());
+            return response.status(200).send(chat);
         } catch (error) {
             if (error instanceof ChatControllerErrorUserInfoIdNotFound) {
                 return response.status(404).send();
@@ -53,7 +47,7 @@ export class ChatView {
             }
             let otherUserInfoId: number = request.body.otherUserInfoId;
             let chat = await this.controller.createChatBetween2Users(request.context.username, otherUserInfoId);
-            return response.status(201).send(chat.toPlainObject());
+            return response.status(201).send(chat);
         } catch (error) {
             if (error instanceof ChatControllerErrorUserInfoIdNotFound) {
                 return response.status(404).send();

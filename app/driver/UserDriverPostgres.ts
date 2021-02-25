@@ -139,4 +139,8 @@ export class UserDriverPostgres implements IUserDriver {
         }
     }
     
+    async isFriend(username1: string, username2: string): Promise<boolean> {
+        let result = await this.pool.query('SELECT COUNT(*) FROM "User_Friends" where (username=$1 AND friendUsername=$2) OR (username=$2 AND friendUsername=$1)', [username1, username2]);
+        return result.rows[0].count > 0;
+    }
 }

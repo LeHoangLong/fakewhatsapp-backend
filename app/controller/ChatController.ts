@@ -20,6 +20,21 @@ export interface ChatMessagePair {
     chat: Chat,
 }
 
+export class UserWithFriendFlag extends User {
+    constructor(
+        userInfoId: number,
+        name: string,
+        public isFriend: boolean,
+    ) {
+        super(userInfoId, name);
+    }
+}
+
+export interface ChatsWithParticipantsInfo {
+    chats: Chat[],
+    participants: UserWithFriendFlag[],
+}
+
 @injectable()
 export class ChatController {
     constructor(
@@ -29,9 +44,32 @@ export class ChatController {
 
     }
 
-    async fetchChatsForUser(username: string, limit: number, offset: number): Promise<Chat[]> {
+    async fetchChatsForUser(username: string, limit: number, offset: number): Promise<ChatsWithParticipantsInfo> {
         let user: User = await this.userDriver.fetchUser(username);
-        return this.chatDriver.fetchChatsForUser(user.userInfoId, limit, offset);
+        let chats = await this.chatDriver.fetchChatsForUser(user.userInfoId, limit, offset);
+        let participants: UserWithFriendFlag[] = [];
+        let fetchedParticipantIds: number[] = [];
+        for (let i = 0; i < chats.length; i++) {
+            let chat = chats[i];
+            for (let j = 0; j < chat.participantsId.length; j++) {
+                let participantId = chat.participantsId[j];
+                if (!fetchedParticipantIds.includes(participantId)) {
+                    fetchedParticipantIds.push(participantId);
+                    let user = await this.userDriver.fetchUserFromInfoId(participantId);
+                    let username2 = await this.userDriver.fetchUsernameFromInfoId(participantId);
+                    let isFriend = await this.userDriver.isFriend(username, username2);
+                    participants.push(new UserWithFriendFlag(
+                        user.userInfoId,
+                        user.name,
+                        isFriend,
+                    ));
+                }
+            }
+        }
+        return {
+            participants: participants,
+            chats: chats,
+        };
     } 
 
     async fetchChatBetween2Users(username: string, otherUserInfoId: number): Promise<Chat> {

@@ -12,8 +12,4 @@ export class Chat {
     ) {
 
     }
-
-    toPlainObject(): Object {
-        return Object.assign({}, this);
-    }
 }
