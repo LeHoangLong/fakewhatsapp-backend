@@ -1,7 +1,0 @@
-{
-    "postgres": {
-        "user": "fakewhatsapp",
-        "password": "fakewhatsapp",
-        "host": "localhost"
-    }
-}
