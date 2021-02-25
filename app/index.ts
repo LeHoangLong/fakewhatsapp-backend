@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 //TODO: remove
 app.use(async (req, res, next) => {
   //simulate delay for developement
-  await new Promise(resolve => setTimeout(resolve, 100));
+  //await new Promise(resolve => setTimeout(resolve, 100));
   next();
 });
 
