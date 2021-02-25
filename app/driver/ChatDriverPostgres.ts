@@ -14,7 +14,7 @@ export class ChatDriverPostgres implements IChatDriver {
     }
 
     async fetchChatsForUser(userInfoId: number, limit: number, offset: number): Promise<Chat[]> {
-        let result = await this.pool.query('SELECT ch.id, ch.name, m.content, m.senttime FROM "Chat" ch LEFT JOIN "Message" m ON ch.latestmessageid=m.id INNER JOIN "User_Chat" uc ON (ch.id=uc.chatid AND uc.userinfoid=$1) ORDER BY m.senttime DESC LIMIT $2 OFFSET $3', [userInfoId, limit, offset]);
+        let result = await this.pool.query('SELECT ch.id, ch.name, ch.isgroupchat, m.content, m.senttime FROM "Chat" ch LEFT JOIN "Message" m ON ch.latestmessageid=m.id INNER JOIN "User_Chat" uc ON (ch.id=uc.chatid AND uc.userinfoid=$1) ORDER BY m.senttime DESC LIMIT $2 OFFSET $3', [userInfoId, limit, offset]);
         let ret: Chat[] = [];
         for (let i = 0; i < result.rowCount; i++) {
             let chatId: number = result.rows[i].id;
@@ -29,7 +29,8 @@ export class ChatDriverPostgres implements IChatDriver {
                 result.rows[i].content,
                 result.rows[i].senttime,
                 result.rows[i].name,
-                pariticipantIds
+                pariticipantIds,
+                result.rows[i].isgroupchat,
             );
             ret.push(chat);
         }
@@ -51,7 +52,8 @@ export class ChatDriverPostgres implements IChatDriver {
                 '',
                 result.rows[0].createdtime,
                 result.rows[0].name,
-                [userInfoId1, userInfoId2]
+                [userInfoId1, userInfoId2],
+                false,
             );
         } catch (error) {
             await client.query('ROLLBACK');
@@ -91,7 +93,8 @@ export class ChatDriverPostgres implements IChatDriver {
                 messageContent,
                 messageSentTime,
                 result.rows[0].name,
-                [userInfoId1, userInfoId2]
+                [userInfoId1, userInfoId2],
+                false,
             );
         } else {
             throw new IChatDriverErrorChatBetween2UsersNotFound(userInfoId1, userInfoId2);

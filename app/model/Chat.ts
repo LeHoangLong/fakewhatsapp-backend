@@ -8,6 +8,7 @@ export class Chat {
         public latestMessageSentTime: Date,
         public name: string,
         public participantsId: number[],
+        public isGroupChat: boolean,
     ) {
 
     }

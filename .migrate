@@ -1,5 +1,5 @@
 {
-  "lastRun": "1614096439343-add-createdtime-to-chat.js",
+  "lastRun": "1614231700054-add-is-group-chat.js",
   "migrations": [
     {
       "title": "1613490731203-create-initial-model.js",
@@ -40,6 +40,10 @@
     {
       "title": "1614096439343-add-createdtime-to-chat.js",
       "timestamp": 1614096479036
+    },
+    {
+      "title": "1614231700054-add-is-group-chat.js",
+      "timestamp": 1614231755916
     }
   ]
 }
