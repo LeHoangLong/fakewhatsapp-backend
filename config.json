@@ -2,7 +2,7 @@
     "postgres": {
         "user": "fakewhatsapp",
         "password": "fakewhatsapp",
-        "host": "localhost"
+        "host": "db"
     },
     "pagination": {
         "defaultSize": 10,
